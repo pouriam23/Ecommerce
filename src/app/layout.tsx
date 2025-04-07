@@ -39,15 +39,10 @@ export default function RootLayout({
                 Digital Shop
               </Link>
             </div>
-            <div className="flex items-center gap-2">
-            </div>
+            <div className="flex items-center gap-2"></div>
           </header>
-          <div className="px-20 mt-28">
-            {children}
-          </div>
-          <div className="my-10 mx-auto flex justify-center">
-            {/* {ads} */}
-          </div>
+          <div className="px-20 mt-28">{children}</div>
+          <div className="my-10 mx-auto flex justify-center">{/* {ads} */}</div>
           <footer className="bg-black w-full text-white flex items-center justify-center h-10">
             <p>&copy; 2025 JS with Ali. All rights reserved.</p>
           </footer>

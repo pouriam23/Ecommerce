@@ -6,7 +6,6 @@ import { Button } from '@/components/ui';
 import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 
-
 export default function ProductDetail(product: any) {
   return (
     <div className="container mx-auto py-10">
@@ -42,9 +41,7 @@ export default function ProductDetail(product: any) {
               <p className="text-gray-600 line-clamp">
                 {product?.description || 'No description available.'}
               </p>
-              <Button
-                className="my-4"
-              >
+              <Button className="my-4">
                 Add to cart
                 <ShoppingCart />
               </Button>

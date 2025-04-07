@@ -31,4 +31,3 @@ function ProductListView() {
 }
 
 export default ProductListView;
-
