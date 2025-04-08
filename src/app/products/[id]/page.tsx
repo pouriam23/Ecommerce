@@ -1,14 +1,17 @@
-import ProductDetail from '@/modules/products/components/ProductDetail';
-import { getProductById } from '@/modules/products/services';
-import { ProductsWithImages } from '@/types/index';
-import React from 'react';
+import Spinner from '@/components/Spinner';
+import ProductDetailView from '@/modules/products/views/ProductDetailView';
+import React, { Suspense } from 'react';
 
-async function page({ params }: { params: Promise<{ id: string }> }) {
+const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const data = await params;
   const { id } = data;
-  const product = (await getProductById(id)) as ProductsWithImages;
-
-  return <ProductDetail {...product} />;
-}
+  return (
+    <div>
+      <Suspense fallback={<Spinner />}>
+        <ProductDetailView id={id} />
+      </Suspense>
+    </div>
+  );
+};
 
 export default page;

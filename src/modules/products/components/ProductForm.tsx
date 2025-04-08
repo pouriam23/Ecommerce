@@ -23,7 +23,6 @@ import { useForm } from 'react-hook-form';
 import { upsertProduct } from '../services';
 import UploadImage from './UploadImage';
 
-
 const ProductForm = (props: { product: Product | null }) => {
   const { product } = props;
   const { register, handleSubmit, setValue } = useForm<Product>();
