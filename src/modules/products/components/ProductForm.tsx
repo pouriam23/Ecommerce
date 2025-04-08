@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { Product, ProductCategory } from '@prisma/client';
 import {
   Input,
@@ -22,55 +21,40 @@ import {
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { upsertProduct } from '../services';
-import { useRouter } from 'next/navigation';
+import UploadImage from './UploadImage';
+
 
 const ProductForm = (props: { product: Product | null }) => {
   const { product } = props;
-  const router = useRouter();
-  const { register, handleSubmit, setValue } = useForm<Product>({
-    defaultValues: {
-      name: product?.name || '',
-      category: product?.category || ProductCategory.OTHERS,
-      description: product?.description || '',
-      price: product?.price || 0,
-      quantity: product?.quantity || 0,
-    },
-  });
+  const { register, handleSubmit, setValue } = useForm<Product>();
 
-  // Update form values when editing an existing product
-  useEffect(() => {
-    if (product) {
-      setValue('name', product.name);
-      setValue('category', product.category);
-      setValue('description', product.description);
-      setValue('price', product.price);
-      setValue('quantity', product.quantity);
-    }
-  }, [product, setValue]);
-
-  const onSubmitForm = async (data: Product) => {
+  const onSubmitForm = (data: Product) => {
     const _product = {
       ...data,
-      price: parseFloat(data.price?.toString() || '0'),
-      quantity: parseInt(data.quantity?.toString() || '0'),
-      category: data.category,
+      id: product?.id,
+      price: parseFloat(data?.price?.toString() || '0'),
+      quantity: parseFloat(data?.quantity?.toString() || '0'),
     };
-    await upsertProduct(_product);
-    // Refresh the route so that updated product list is shown
-    router.push('/dashboard/products');
+    upsertProduct(_product as Product);
   };
 
   return (
     <Card className="w-[500px] mx-auto mt-10">
       <form className="max-w-lg" onSubmit={handleSubmit(onSubmitForm)}>
         <CardHeader>
-          <CardTitle>Product</CardTitle>
+          <CardTitle> Product</CardTitle>
+
           <CardDescription>Create New Product</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="my-2">
             <Label htmlFor="name">Product Name</Label>
-            <Input {...register('name')} id="name" required />
+            <Input
+              {...register('name')}
+              id="name"
+              required
+              defaultValue={product?.name || ''}
+            />
           </div>
           <div className="my-2">
             <Label htmlFor="category">Category</Label>
@@ -95,7 +79,11 @@ const ProductForm = (props: { product: Product | null }) => {
           </div>
           <div className="my-2">
             <Label htmlFor="description">Description</Label>
-            <Textarea {...register('description')} id="description" />
+            <Textarea
+              {...register('description')}
+              id="description"
+              defaultValue={product?.description || ''}
+            />
           </div>
           <div className="my-2">
             <Label htmlFor="price">Price</Label>
@@ -104,11 +92,17 @@ const ProductForm = (props: { product: Product | null }) => {
               type="number"
               id="price"
               step="0.01"
+              defaultValue={product?.price || ''}
             />
           </div>
           <div className="my-2">
             <Label htmlFor="quantity">Quantity</Label>
-            <Input {...register('quantity')} type="number" id="quantity" />
+            <Input
+              {...register('quantity')}
+              type="number"
+              id="quantity"
+              defaultValue={product?.quantity || ''}
+            />
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
@@ -120,9 +114,13 @@ const ProductForm = (props: { product: Product | null }) => {
           </Button>
         </CardFooter>
       </form>
+      {product?.id && (
+        <CardFooter>
+          <UploadImage productId={product?.id} />
+        </CardFooter>
+      )}
     </Card>
   );
 };
 
 export default ProductForm;
-

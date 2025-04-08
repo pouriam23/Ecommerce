@@ -28,7 +28,6 @@ export const getProductById = async (id: string) => {
   return result;
 };
 
-
 export const upsertProduct = async (product: Product) => {
   const { id } = product;
   let result;
@@ -47,7 +46,6 @@ export const upsertProduct = async (product: Product) => {
 
   return result;
 };
-
 
 export const deleteProduct = async (id: string) => {
   await prisma.product.delete({ where: { id } });
