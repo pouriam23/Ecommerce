@@ -123,5 +123,3 @@ const ProductForm = (props: { product: Product | null }) => {
 };
 
 export default ProductForm;
-
-
