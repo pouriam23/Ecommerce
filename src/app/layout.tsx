@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { MonitorSmartphone, ShoppingCart } from 'lucide-react';
+import { Toaster } from "@/components/ui/sonner"
 import Link from 'next/link';
 
 const geistSans = Geist({
@@ -42,6 +43,7 @@ export default function RootLayout({
             <div className="flex items-center gap-2"></div>
           </header>
           <div className="px-20 mt-28">{children}</div>
+          <Toaster />
           <div className="my-10 mx-auto flex justify-center">{/* {ads} */}</div>
           <footer className="bg-black w-full text-white flex items-center justify-center h-10">
             <p>&copy; 2025 JS with Ali. All rights reserved.</p>

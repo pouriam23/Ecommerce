@@ -19,50 +19,62 @@ import {
   SelectItem,
 } from '@/components/ui';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
-import { upsertProduct } from '../services';
 import UploadImage from './UploadImage';
+import { useActionState, useEffect, useState } from 'react';
+import { upsertProduct } from '../action';
+import { toast } from 'sonner';
 
-const ProductForm = (props: { product: Product | null }) => {
+// toast('Event has been created.');
+
+const ProductFormWithAction = (props: { product: Product | null }) => {
   const { product } = props;
-  const { register, handleSubmit, setValue } = useForm<Product>();
+  const [state, action, isPending] = useActionState<
+    {
+      data: Product | null;
+      error: Record<string, string> | null;
+    },
+    FormData
+  >(upsertProduct, {
+    data: product ?? null,
+    error: null,
+  });
 
-  const onSubmitForm = (data: Product) => {
-    const _product = {
-      ...data,
-      id: product?.id,
-      price: parseFloat(data?.price?.toString() || '0'),
-      quantity: parseFloat(data?.quantity?.toString() || '0'),
-    };
-    upsertProduct(_product as Product);
+  const { error, data } = state;
+
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    setSubmitted(true);
+    action(formData);
   };
+
+  useEffect(() => {
+    if (!submitted) return;
+    if (error) toast.error('Failed');
+    else if (data) toast.success('success');
+  }, [data, error, submitted]);
 
   return (
     <Card className="w-[500px] mx-auto mt-10">
-      <form className="max-w-lg" onSubmit={handleSubmit(onSubmitForm)}>
+      <form className="max-w-lg" action={handleSubmit}>
+        <input type="hidden" name="id" value={product?.id || ''} />
         <CardHeader>
           <CardTitle> Product</CardTitle>
-
           <CardDescription>Create New Product</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="my-2">
             <Label htmlFor="name">Product Name</Label>
-            <Input
-              {...register('name')}
-              id="name"
-              required
-              defaultValue={product?.name || ''}
-            />
+            <Input name="name" id="name" defaultValue={data?.name || ''} />
+            {error?.name && (
+              <span className="text-red-600 ml-2 mt-2">{error.name}</span>
+            )}
           </div>
           <div className="my-2">
             <Label htmlFor="category">Category</Label>
             <Select
-              required
-              onValueChange={(value) =>
-                setValue('category', value as ProductCategory)
-              }
-              defaultValue={product?.category || ProductCategory.OTHERS}
+              name="category"
+              defaultValue={data?.category || ProductCategory.OTHERS}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a category" />
@@ -79,29 +91,35 @@ const ProductForm = (props: { product: Product | null }) => {
           <div className="my-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
-              {...register('description')}
+              name="description"
               id="description"
-              defaultValue={product?.description || ''}
+              defaultValue={data?.description || ''}
             />
           </div>
           <div className="my-2">
             <Label htmlFor="price">Price</Label>
             <Input
-              {...register('price')}
+              name="price"
               type="number"
               id="price"
               step="0.01"
-              defaultValue={product?.price || ''}
+              defaultValue={data?.price || ''}
             />
+            {error?.price && (
+              <span className="text-red-600 ml-2 mt-2">{error.price}</span>
+            )}
           </div>
           <div className="my-2">
             <Label htmlFor="quantity">Quantity</Label>
             <Input
-              {...register('quantity')}
+              name="quantity"
               type="number"
               id="quantity"
-              defaultValue={product?.quantity || ''}
+              defaultValue={data?.quantity || ''}
             />
+            {error?.quantity && (
+              <span className="text-red-600 ml-2 mt-2">{error.quantity}</span>
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
@@ -109,7 +127,11 @@ const ProductForm = (props: { product: Product | null }) => {
             <Link href="/dashboard/products">Back</Link>
           </Button>
           <Button type="submit">
-            {product?.id ? 'Update Product' : 'Add Product'}
+            {isPending
+              ? 'loading...'
+              : product?.id
+                ? 'Update Product'
+                : 'Add Product'}
           </Button>
         </CardFooter>
       </form>
@@ -122,6 +144,4 @@ const ProductForm = (props: { product: Product | null }) => {
   );
 };
 
-export default ProductForm;
-
-
+export default ProductFormWithAction;
