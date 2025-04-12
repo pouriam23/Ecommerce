@@ -13,13 +13,3 @@ async function ProductDetailView(props: { id: string }) {
 }
 
 export default ProductDetailView;
-
-
-
-
-
-
-
-
-
-

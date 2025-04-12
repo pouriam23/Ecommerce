@@ -13,4 +13,3 @@ function DashboardProductPage() {
 }
 
 export default DashboardProductPage;
-
