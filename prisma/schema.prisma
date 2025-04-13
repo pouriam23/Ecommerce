@@ -12,7 +12,6 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 // generate schema
 
 enum ProductCategory {
@@ -22,28 +21,28 @@ enum ProductCategory {
   OTHERS
 }
 
-model Product {
-  id          String          @id @default(uuid())
-  name        String          @db.VarChar(255)
-  category    ProductCategory
+model Product{
+  id String @id @default(uuid())
+  name String @db.VarChar(255)
+  category ProductCategory
   description String?
-  price       Float?          @default(0.0)
-  quantity    Int?            @default(0)
-  images      Image[]
-  CartItem    CartItem[]
-}
+  price Float? @default(0.0)
+  quantity Int? @default(0)  
+  images Image[]
+  cart CartItem[]
+ }
 
-model Image {
-  id        String   @id @default(uuid())
-  image     String
-  Product   Product? @relation(fields: [productId], references: [id])
+ model Image{
+  id String @id @default(uuid())
+  image String
+  Product Product? @relation(fields: [productId],references: [id])
   productId String?
-}
+ }
 
-model CartItem {
-  id        Int     @id @default(autoincrement())
-  userId    String
+model CartItem{
+  id Int @id @default(autoincrement())
+  userId String
   productId String
-  quantity  Int
-  product   Product @relation(fields: [productId], references: [id])
+  quantity Int
+  product Product @relation(fields: [productId],references: [id])
 }

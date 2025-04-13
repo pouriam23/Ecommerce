@@ -12,14 +12,15 @@ export const getProducts = async () => {
 };
 
 export const getProductsAPI = async () => {
-  const result = await fetch('/api/product');
+  // Use an environment variable to set the base URL if available,
+  // otherwise fallback to a default (like 'http://localhost:3000')
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const result = await fetch(`${baseUrl}/api/product`);
   const response = await result.json();
   return response;
 };
 
 export const getProductById = async (id: string) => {
-  //throw new Error('some errors from server please try again');
-  //await new Promise((resolve) => setTimeout(resolve, 4000));
   const result = await prisma.product.findFirst({
     where: { id },
     include: { images: true },
@@ -35,9 +36,7 @@ export const upsertProduct = async (product: Product) => {
   let result;
   if (id) {
     result = await prisma.product.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: product,
     });
   } else {
@@ -45,7 +44,6 @@ export const upsertProduct = async (product: Product) => {
       data: product,
     });
   }
-
   return result;
 };
 

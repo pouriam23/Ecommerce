@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { MonitorSmartphone} from 'lucide-react';
+import { MonitorSmartphone } from 'lucide-react';
 import Link from 'next/link';
 import { Toaster } from '@/components/ui/sonner';
 import { ClerkProvider } from '@clerk/nextjs';
@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Digital shop',
-  description: 'digital shop to buy digital stuff',
+  title: 'Ecommerce',
+  description: 'Poruia and Erfan Ecommerce Shop',
 };
 
 export default function RootLayout({
@@ -83,4 +83,3 @@ export default function RootLayout({
     </ClerkProvider>
   );
 }
-
